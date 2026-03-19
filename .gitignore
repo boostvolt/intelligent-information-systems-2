@@ -1,0 +1,23 @@
+# KNIME / Eclipse workspace metadata
+.metadata/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+
+# IDEs
+.idea/
+.vscode/
+*.iml
+
+# Misc
+*.log
+Thumbs.db

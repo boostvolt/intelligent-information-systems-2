@@ -72,37 +72,124 @@ def node_settings_wrap(name: str, factory: str, bundle_name: str,
 {XML_HEADER}
 <config {CONFIG_NS} key="settings.xml">
     {entry("node-name", name)}
-    {entry("node-factory", factory)}
+    {entry("factory", factory)}
     {entry("node-bundle-name", bundle_name)}
     {entry("node-bundle-symbolic-name", bundle_sym)}
     {entry("node-bundle-vendor", "KNIME GmbH, Konstanz, Germany")}
     {entry("node-bundle-version", "5.1.0")}
     {entry("node-creationTime", "2024-01-01 00:00:00")}
+    {entry("customDescription", "", isnull=True)}
+    {entry("state", "IDLE")}
+    <config key="factory_settings"/>
     <config key="model">
 {model_inner}
+    </config>
+    <config key="ports"/>
+    <config key="internal_node_subsettings">
+        {entry("memory_policy", "CacheSmallInMemory")}
     </config>
 </config>
 """
 
 
-def make_csv_reader(file_hint: str) -> str:
-    row_delim = "\\n"
+def make_csv_reader(file_path: str) -> str:
+    """Non-deprecated CSV Reader (CSVTableReaderNodeFactory, KNIME 4.3+)."""
     model = f"""\
-        {entry("url", file_hint)}
-        {entry("colDelimiter", ";")}
-        {entry("rowDelimiter", row_delim)}
-        {entry("quote", "&quot;")}
-        {entry("commentStart", "")}
-        {entry("hasRowHeader", False, "xboolean")}
-        {entry("hasColHeader", True, "xboolean")}
-        {entry("supportShortLines", False, "xboolean")}
-        {entry("limitRowsChecker", False, "xboolean")}
-        {entry("skipFirstLinesChecker", False, "xboolean")}
-        {entry("characterSetName", "ISO-8859-1")}
-        {entry("limitAnalysisChecker", False, "xboolean")}"""
+        <config key="settings">
+            <config key="file_selection_Internals">
+                <entry key="SettingsModelID" type="xstring" value="SMID_ReaderFileChooser"/>
+                <entry key="EnabledStatus" type="xboolean" value="true"/>
+            </config>
+            <config key="file_selection">
+                <config key="file_system_chooser__Internals">
+                    <entry key="has_fs_port" type="xboolean" value="false"/>
+                    <entry key="overwritten_by_variable" type="xboolean" value="false"/>
+                    <entry key="convenience_fs_category" type="xstring" value="LOCAL"/>
+                    <entry key="relative_to" type="xstring" value="knime.workflow.data"/>
+                    <entry key="mountpoint" type="xstring" value="LOCAL"/>
+                    <entry key="spaceId" type="xstring" value=""/>
+                    <entry key="spaceName" type="xstring" value=""/>
+                    <entry key="custom_url_timeout" type="xint" value="1000"/>
+                    <entry key="connected_fs" type="xboolean" value="false"/>
+                </config>
+                <config key="path">
+                    <entry key="location_present" type="xboolean" value="true"/>
+                    <entry key="file_system_type" type="xstring" value="LOCAL"/>
+                    <entry key="file_system_specifier" type="xstring" value=""/>
+                    <entry key="path" type="xstring" value="{file_path}"/>
+                </config>
+                <config key="filter_mode_Internals">
+                    <entry key="SettingsModelID" type="xstring" value="SMID_FilterMode"/>
+                    <entry key="EnabledStatus" type="xboolean" value="true"/>
+                </config>
+                <config key="filter_mode">
+                    <entry key="filter_mode" type="xstring" value="FILE"/>
+                    <entry key="include_subfolders" type="xboolean" value="false"/>
+                    <config key="filter_options">
+                        <entry key="filter_files_extension" type="xboolean" value="false"/>
+                        <entry key="files_extension_expression" type="xstring" value=""/>
+                        <entry key="files_extension_case_sensitive" type="xboolean" value="false"/>
+                        <entry key="filter_files_name" type="xboolean" value="false"/>
+                        <entry key="files_name_expression" type="xstring" value="*"/>
+                        <entry key="files_name_case_sensitive" type="xboolean" value="false"/>
+                        <entry key="files_name_filter_type" type="xstring" value="WILDCARD"/>
+                        <entry key="include_hidden_files" type="xboolean" value="false"/>
+                        <entry key="include_special_files" type="xboolean" value="true"/>
+                        <entry key="filter_folders_name" type="xboolean" value="false"/>
+                        <entry key="folders_name_expression" type="xstring" value="*"/>
+                        <entry key="folders_name_case_sensitive" type="xboolean" value="false"/>
+                        <entry key="folders_name_filter_type" type="xstring" value="WILDCARD"/>
+                        <entry key="include_hidden_folders" type="xboolean" value="false"/>
+                        <entry key="follow_links" type="xboolean" value="true"/>
+                    </config>
+                </config>
+            </config>
+            <entry key="has_column_header" type="xboolean" value="true"/>
+            <entry key="has_row_id" type="xboolean" value="false"/>
+            <entry key="support_short_data_rows" type="xboolean" value="false"/>
+            <entry key="skip_empty_data_rows" type="xboolean" value="false"/>
+            <entry key="prepend_file_idx_to_row_id" type="xboolean" value="false"/>
+            <entry key="comment_char" type="xstring" value="#"/>
+            <entry key="column_delimiter" type="xstring" value=";"/>
+            <entry key="quote_char" type="xstring" value="&quot;"/>
+            <entry key="quote_escape_char" type="xstring" value="&quot;"/>
+            <entry key="use_line_break_row_delimiter" type="xboolean" value="true"/>
+            <entry key="row_delimiter" type="xstring" value="%%00013%%00010"/>
+            <entry key="autodetect_buffer_size" type="xint" value="1048576"/>
+        </config>
+        <config key="advanced_settings">
+            <entry key="spec_merge_mode_Internals" type="xstring" value="UNION"/>
+            <entry key="fail_on_differing_specs" type="xboolean" value="true"/>
+            <entry key="append_path_column_Internals" type="xboolean" value="false"/>
+            <entry key="path_column_name_Internals" type="xstring" value="Path"/>
+            <entry key="limit_data_rows_scanned" type="xboolean" value="true"/>
+            <entry key="max_data_rows_scanned" type="xlong" value="10000"/>
+            <entry key="save_table_spec_config_Internals" type="xboolean" value="true"/>
+            <entry key="check_table_spec" type="xboolean" value="false"/>
+            <entry key="limit_memory_per_column" type="xboolean" value="true"/>
+            <entry key="maximum_number_of_columns" type="xint" value="8192"/>
+            <entry key="quote_option" type="xstring" value="REMOVE_QUOTES_AND_TRIM"/>
+            <entry key="replace_empty_quotes_with_missing" type="xboolean" value="true"/>
+            <entry key="no_row_delimiters_in_quotes" type="xboolean" value="false"/>
+            <entry key="min_chunk_size_in_bytes" type="xlong" value="67108864"/>
+            <entry key="max_num_chunks_per_file" type="xint" value="4"/>
+            <entry key="thousands_separator" type="xstring" value="%%00000"/>
+            <entry key="decimal_separator" type="xstring" value="."/>
+        </config>
+        <config key="limit_rows">
+            <entry key="skip_lines" type="xboolean" value="false"/>
+            <entry key="number_of_lines_to_skip" type="xlong" value="1"/>
+            <entry key="skip_data_rows" type="xboolean" value="false"/>
+            <entry key="number_of_rows_to_skip" type="xlong" value="1"/>
+            <entry key="limit_data_rows" type="xboolean" value="false"/>
+            <entry key="max_rows" type="xlong" value="50"/>
+        </config>
+        <config key="encoding">
+            <entry key="charset" type="xstring" value="ISO-8859-1"/>
+        </config>"""
     return node_settings_wrap(
         "CSV Reader",
-        "org.knime.base.node.io.csvreader.CSVReaderNodeFactory",
+        "org.knime.base.node.io.filehandling.csv.reader.CSVTableReaderNodeFactory",
         "KNIME Base Nodes", "org.knime.base", model)
 
 
@@ -134,18 +221,38 @@ def make_db_writer(schema: str, table: str) -> str:
 
 
 def make_row_filter(column: str, value: str) -> str:
+    """Non-deprecated Row Filter (row3.RowFilterNodeFactory, KNIME 5.x)."""
     model = f"""\
-        <config key="rowFilter">
-            {entry("FilterType", "ColValFilter")}
-            {entry("ColumnName", column)}
-            {entry("Operator", "LE")}
-            {entry("MatchCase", False, "xboolean")}
-            {entry("DataValue", value)}
-            {entry("include", True, "xboolean")}
-        </config>"""
+        <entry key="outputMode" type="xstring" value="MATCHING"/>
+        <entry key="matchCriteria" type="xstring" value="AND"/>
+        <config key="predicates">
+            <config key="0">
+                <config key="column">
+                    <entry key="selected" type="xstring" value="{column}"/>
+                    <config key="compatibleTypes_Internals">
+                        <entry key="array-size" type="xint" value="1"/>
+                        <entry key="0" type="xstring" value="org.knime.core.data.DoubleValue"/>
+                    </config>
+                </config>
+                <entry key="operator" type="xstring" value="LTE"/>
+                <config key="predicateValues">
+                    <config key="values">
+                        <config key="0">
+                            <config key="typeIdentifier">
+                                <entry key="cell_class" type="xstring" value="org.knime.core.data.def.DoubleCell"/>
+                                <entry key="is_null" type="xboolean" value="false"/>
+                            </config>
+                            <entry key="value" type="xstring" value="{value}"/>
+                        </config>
+                    </config>
+                    <entry key="inputKind" type="xstring" value="SINGLE"/>
+                </config>
+            </config>
+        </config>
+        <entry key="domains" type="xstring" value="RETAIN"/>"""
     return node_settings_wrap(
         "Row Filter",
-        "org.knime.base.node.preproc.filter.row.RowFilterNodeFactory",
+        "org.knime.base.node.preproc.filter.row3.RowFilterNodeFactory",
         "KNIME Base Nodes", "org.knime.base", model)
 
 
@@ -168,37 +275,37 @@ def make_string_manip(expression: str, replaced_col: str) -> str:
 
 
 def make_str_to_date(column: str, fmt: str) -> str:
-    model = f"""\
-        <config key="col_select">
-            {entry("filter-type", "STANDARD")}
-            <config key="included_names">
-                {entry("array-size", 1, "xint")}
-                {entry("0", column)}
-            </config>
-            <config key="excluded_names">
-                {entry("array-size", 0, "xint")}
-            </config>
-        </config>
-        {entry("new_type", "LOCAL_DATE")}
-        {entry("format", fmt)}
-        {entry("cancel_on_fail", False, "xboolean")}
-        {entry("replace_or_append", "replace")}
-        {entry("new_col_name_suffix", "_Date")}"""
+    """Non-deprecated String to Date&Time (NodeFactory2, WebUI node).
+    NOTE: NodeFactory2 is a WebUI node — column selection and format must be
+    configured manually in KNIME after import (open the node dialog).
+    Expected column: {column}, format: {fmt}
+    """
+    # NodeFactory2 uses the KNIME WebUI settings system.
+    # Provide empty model; user sets column + format in the dialog.
+    model = ""
     return node_settings_wrap(
         "String to Date&amp;Time",
-        "org.knime.time.node.convert.stringtodatetime.StringToDateTimeNodeFactory",
-        "KNIME Core", "org.knime.core", model)
+        "org.knime.time.node.convert.stringtodatetime.StringToDateTimeNodeFactory2",
+        "KNIME Date and Time Handling", "org.knime.time", model)
 
 
-def make_math_formula(expression: str, result_col: str) -> str:
+def make_rule_engine_abs(column: str) -> str:
+    """Rule Engine node (built-in) to take ABS of a numeric column."""
+    rule0 = f"${column}$ &lt; 0 =&gt; -${column}$"
+    rule1 = f"TRUE =&gt; ${column}$"
     model = f"""\
-        {entry("expression", expression)}
-        {entry("result-column", result_col)}
-        {entry("replace-column", True, "xboolean")}"""
+        <config key="rules">
+            {entry("array-size", 2, "xint")}
+            {entry("0", rule0)}
+            {entry("1", rule1)}
+        </config>
+        {entry("append-column", "replace")}
+        {entry("new-col-name", column)}
+        {entry("error-on-no-match", True, "xboolean")}"""
     return node_settings_wrap(
-        "Math Formula",
-        "org.knime.ext.formula.node.processor.FormulatorNodeFactory",
-        "KNIME Math Formula", "org.knime.ext.formula", model)
+        "Rule Engine",
+        "org.knime.base.node.rules.engine.RuleEngineNodeFactory",
+        "KNIME Base Nodes", "org.knime.base", model)
 
 
 def make_missing_value(column: str, default_val: str) -> str:
@@ -285,7 +392,7 @@ connect(conn, w, 1, 2)
 # --- OrderDetails (row 4) ---
 y += ROW_H
 n  = add_node("CSV Reader OrderDetails", make_csv_reader("/path/to/OrderDetails.csv"), 50,        y)
-mf = add_node("Math Formula ABS Discount", make_math_formula("abs($$Discount$$)", "Discount"),    50+COL_W,  y)
+mf = add_node("Rule Engine ABS Discount",  make_rule_engine_abs("Discount"),                       50+COL_W,  y)
 mv = add_node("Missing Value Discount 0",  make_missing_value("Discount", "0"),                   50+COL_W*2, y)
 w  = add_node("DB Writer staging.order_details", make_db_writer("staging", "order_details"),      50+COL_W*3, y)
 connect(n, mf); connect(mf, mv); connect(mv, w); connect(conn, w, 1, 2)
