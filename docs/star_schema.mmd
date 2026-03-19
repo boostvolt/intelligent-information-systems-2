@@ -1,0 +1,57 @@
+erDiagram
+    dim_product {
+        SERIAL product_key PK
+        INTEGER product_id
+        VARCHAR product_name
+        VARCHAR category_name
+        NUMERIC unit_price
+        BOOLEAN discontinued
+    }
+    dim_customer {
+        SERIAL customer_key PK
+        CHAR customer_id
+        VARCHAR company_name
+        VARCHAR city
+        VARCHAR region
+        VARCHAR country
+    }
+    dim_employee {
+        SERIAL employee_key PK
+        INTEGER employee_id
+        VARCHAR full_name
+        VARCHAR title
+        VARCHAR reports_to_name
+    }
+    dim_time {
+        SERIAL time_key PK
+        DATE date
+        VARCHAR day_name
+        INTEGER month
+        INTEGER quarter
+        INTEGER year
+        BOOLEAN is_weekend
+    }
+    dim_shipping {
+        SERIAL shipping_key PK
+        INTEGER ship_via_id
+        VARCHAR shipper_name
+    }
+    fact_orders {
+        SERIAL fact_id PK
+        INTEGER product_key FK
+        INTEGER customer_key FK
+        INTEGER employee_key FK
+        INTEGER order_time_key FK
+        INTEGER shipping_key FK
+        INTEGER order_id
+        NUMERIC unit_price
+        INTEGER quantity
+        NUMERIC discount
+        NUMERIC total_amount
+        NUMERIC freight_allocation
+    }
+    dim_product ||--o{ fact_orders : "product_key"
+    dim_customer ||--o{ fact_orders : "customer_key"
+    dim_employee ||--o{ fact_orders : "employee_key"
+    dim_time ||--o{ fact_orders : "order_time_key"
+    dim_shipping ||--o{ fact_orders : "shipping_key"
