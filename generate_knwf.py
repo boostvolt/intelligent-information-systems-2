@@ -68,32 +68,41 @@ BUNDLE_SUFFIX = ('    ' + entry("node-bundle-vendor",
 
 def node_settings_wrap(name: str, factory: str, bundle_name: str,
                        bundle_sym: str, model_inner: str) -> str:
+    model_block = f"<config key=\"model\">\n{model_inner}\n    </config>" if model_inner.strip() else "<config key=\"model\"/>"
     return f"""\
 {XML_HEADER}
 <config {CONFIG_NS} key="settings.xml">
-    {entry("node-name", name)}
-    {entry("factory", factory)}
-    {entry("node-bundle-name", bundle_name)}
-    {entry("node-bundle-symbolic-name", bundle_sym)}
-    {entry("node-bundle-vendor", "KNIME GmbH, Konstanz, Germany")}
-    {entry("node-bundle-version", "5.1.0")}
-    {entry("node-creationTime", "2024-01-01 00:00:00")}
-    {entry("customDescription", "", isnull=True)}
-    {entry("state", "IDLE")}
-    <config key="factory_settings"/>
-    <config key="model">
-{model_inner}
-    </config>
-    <config key="ports"/>
+    {entry("node_file", "settings.xml")}
+    <config key="flow_stack"/>
     <config key="internal_node_subsettings">
         {entry("memory_policy", "CacheSmallInMemory")}
+    </config>
+    {model_block}
+    {entry("customDescription", "", isnull=True)}
+    {entry("state", "CONFIGURED")}
+    {entry("factory", factory)}
+    {entry("node-name", name)}
+    {entry("node-bundle-name", bundle_name)}
+    {entry("node-bundle-symbolic-name", bundle_sym)}
+    {entry("node-bundle-vendor", "KNIME AG, Zurich, Switzerland")}
+    {entry("node-bundle-version", "5.8.0")}
+    <config key="factory_settings"/>
+    {entry("name", name)}
+    {entry("hasContent", False, "xboolean")}
+    {entry("isInactive", False, "xboolean")}
+    <config key="ports"/>
+    <config key="filestores">
+        {entry("file_store_location", "", isnull=True)}
+        {entry("file_store_id", "", isnull=True)}
     </config>
 </config>
 """
 
 
-def make_csv_reader(file_path: str) -> str:
-    """Non-deprecated CSV Reader (CSVTableReaderNodeFactory, KNIME 4.3+)."""
+def make_csv_reader(filename: str) -> str:
+    """Non-deprecated CSV Reader (CSVTableReaderNodeFactory, KNIME 4.3+).
+    Path is relative to the KNIME mountpoint (workspace root)."""
+    mountpoint_path = f"knime://knime.mountpoint/{filename}"
     model = f"""\
         <config key="settings">
             <config key="file_selection_Internals">
@@ -104,8 +113,8 @@ def make_csv_reader(file_path: str) -> str:
                 <config key="file_system_chooser__Internals">
                     <entry key="has_fs_port" type="xboolean" value="false"/>
                     <entry key="overwritten_by_variable" type="xboolean" value="false"/>
-                    <entry key="convenience_fs_category" type="xstring" value="LOCAL"/>
-                    <entry key="relative_to" type="xstring" value="knime.workflow.data"/>
+                    <entry key="convenience_fs_category" type="xstring" value="RELATIVE"/>
+                    <entry key="relative_to" type="xstring" value="knime.mountpoint"/>
                     <entry key="mountpoint" type="xstring" value="LOCAL"/>
                     <entry key="spaceId" type="xstring" value=""/>
                     <entry key="spaceName" type="xstring" value=""/>
@@ -114,9 +123,9 @@ def make_csv_reader(file_path: str) -> str:
                 </config>
                 <config key="path">
                     <entry key="location_present" type="xboolean" value="true"/>
-                    <entry key="file_system_type" type="xstring" value="LOCAL"/>
-                    <entry key="file_system_specifier" type="xstring" value=""/>
-                    <entry key="path" type="xstring" value="{file_path}"/>
+                    <entry key="file_system_type" type="xstring" value="RELATIVE"/>
+                    <entry key="file_system_specifier" type="xstring" value="knime.mountpoint"/>
+                    <entry key="path" type="xstring" value="{mountpoint_path}"/>
                 </config>
                 <config key="filter_mode_Internals">
                     <entry key="SettingsModelID" type="xstring" value="SMID_FilterMode"/>
@@ -194,70 +203,31 @@ def make_csv_reader(file_path: str) -> str:
 
 
 def make_db_connector() -> str:
-    model = f"""\
-        {entry("database_type", "postgresql")}
-        {entry("hostname", "localhost")}
-        {entry("port", 5432, "xint")}
-        {entry("database_name", "northwind")}
-        {entry("username", "postgres")}
-        {entry("password", "")}"""
+    """Generic DB Connector (non-deprecated). User must configure connection URL and driver."""
     return node_settings_wrap(
-        "PostgreSQL Connector",
-        "org.knime.database.node.connector.server.DBServerConnectorNodeFactory",
-        "KNIME Database", "org.knime.database", model)
+        "DB Connector",
+        "org.knime.database.node.connector.generic.DBConnectorNodeFactory2",
+        "KNIME Database", "org.knime.database", "")
 
 
 def make_db_writer(schema: str, table: str) -> str:
-    model = f"""\
-        {entry("table", f"{schema}.{table}")}
-        {entry("append", False, "xboolean")}
-        {entry("insert-null-for-missing-cols", True, "xboolean")}
-        {entry("fail-if-exception", True, "xboolean")}
-        {entry("batch-size", 1000, "xint")}"""
+    """DB Writer (non-deprecated, creates table if not exists). User configures table name."""
     return node_settings_wrap(
         "DB Writer",
-        "org.knime.database.node.io.writer.DBWriterNodeFactory",
-        "KNIME Database", "org.knime.database", model)
+        "org.knime.database.node.io.write.DBWriteNodeFactory",
+        "KNIME Database", "org.knime.database", "")
 
 
 def make_row_filter(column: str, value: str) -> str:
-    """Non-deprecated Row Filter (row3.RowFilterNodeFactory, KNIME 5.x)."""
-    model = f"""\
-        <entry key="outputMode" type="xstring" value="MATCHING"/>
-        <entry key="matchCriteria" type="xstring" value="AND"/>
-        <config key="predicates">
-            <config key="0">
-                <config key="column">
-                    <entry key="selected" type="xstring" value="{column}"/>
-                    <config key="compatibleTypes_Internals">
-                        <entry key="array-size" type="xint" value="1"/>
-                        <entry key="0" type="xstring" value="org.knime.core.data.DoubleValue"/>
-                    </config>
-                </config>
-                <entry key="operator" type="xstring" value="LTE"/>
-                <config key="predicateValues">
-                    <config key="values">
-                        <config key="0">
-                            <config key="typeIdentifier">
-                                <entry key="cell_class" type="xstring" value="org.knime.core.data.def.DoubleCell"/>
-                                <entry key="is_null" type="xboolean" value="false"/>
-                            </config>
-                            <entry key="value" type="xstring" value="{value}"/>
-                        </config>
-                    </config>
-                    <entry key="inputKind" type="xstring" value="SINGLE"/>
-                </config>
-            </config>
-        </config>
-        <entry key="domains" type="xstring" value="RETAIN"/>"""
+    """Row Filter v3 (WebUI node). Loads unconfigured — open dialog and set:
+    column={column}, operator=<=, value={value}"""
     return node_settings_wrap(
         "Row Filter",
         "org.knime.base.node.preproc.filter.row3.RowFilterNodeFactory",
-        "KNIME Base Nodes", "org.knime.base", model)
+        "KNIME Base Nodes", "org.knime.base", "")
 
 
 def make_string_manip(expression: str, replaced_col: str) -> str:
-    # escape XML special chars in expression
     expr_xml = (expression
                 .replace("&", "&amp;")
                 .replace("<", "&lt;")
@@ -265,9 +235,9 @@ def make_string_manip(expression: str, replaced_col: str) -> str:
                 .replace('"', "&quot;"))
     model = f"""\
         {entry("expression", expr_xml)}
-        {entry("replace-or-append", "replace")}
-        {entry("replaced-column", replaced_col)}
-        {entry("new-column-name", replaced_col)}"""
+        {entry("replaced_column", replaced_col)}
+        {entry("return_type", "StringValue")}
+        {entry("insert_missing_as_null", False, "xboolean")}"""
     return node_settings_wrap(
         "String Manipulation",
         "org.knime.base.node.preproc.stringmanipulation.StringManipulationNodeFactory",
@@ -289,15 +259,17 @@ def make_str_to_date(column: str, fmt: str) -> str:
         "KNIME Date and Time Handling", "org.knime.time", model)
 
 
-def make_rule_engine_abs(column: str) -> str:
-    """Rule Engine node (built-in) to take ABS of a numeric column."""
-    rule0 = f"${column}$ &lt; 0 =&gt; -${column}$"
-    rule1 = f"TRUE =&gt; ${column}$"
+def make_rule_engine_discount(column: str) -> str:
+    """Rule Engine: handle missing (→ 0) and negative (→ ABS) discount values."""
+    rule0 = f"ISMISSING(${column}$) =&gt; 0.0"
+    rule1 = f"${column}$ &lt; 0 =&gt; -${column}$"
+    rule2 = f"TRUE =&gt; ${column}$"
     model = f"""\
         <config key="rules">
-            {entry("array-size", 2, "xint")}
+            {entry("array-size", 3, "xint")}
             {entry("0", rule0)}
             {entry("1", rule1)}
+            {entry("2", rule2)}
         </config>
         {entry("append-column", "replace")}
         {entry("new-col-name", column)}
@@ -305,21 +277,6 @@ def make_rule_engine_abs(column: str) -> str:
     return node_settings_wrap(
         "Rule Engine",
         "org.knime.base.node.rules.engine.RuleEngineNodeFactory",
-        "KNIME Base Nodes", "org.knime.base", model)
-
-
-def make_missing_value(column: str, default_val: str) -> str:
-    model = f"""\
-        <config key="columnSettings">
-            <config key="0">
-                {entry("columnName", column)}
-                {entry("method", "FIX_VALUE")}
-                {entry("fixedValue", default_val)}
-            </config>
-        </config>"""
-    return node_settings_wrap(
-        "Missing Value",
-        "org.knime.base.node.preproc.pmml.missingval.MVImputationNodeFactory",
         "KNIME Base Nodes", "org.knime.base", model)
 
 
@@ -358,13 +315,13 @@ conn = add_node("PostgreSQL Connector", make_db_connector(), CX, 50)
 
 # --- Categories (row 0) ---
 y = 50
-n = add_node("CSV Reader Categories",      make_csv_reader("/path/to/Categories.csv"), 50,        y)
+n = add_node("CSV Reader Categories",      make_csv_reader("Categories.csv"), 50,        y)
 w = add_node("DB Writer staging.categories", make_db_writer("staging", "categories"),  50+COL_W,  y)
 connect(n, w, 1, 1);  connect(conn, w, 1, 2)
 
 # --- Customers (row 1) ---
 y += ROW_H
-n  = add_node("CSV Reader Customers",            make_csv_reader("/path/to/Customers.csv"), 50,         y)
+n  = add_node("CSV Reader Customers",            make_csv_reader("Customers.csv"), 50,         y)
 s1 = add_node("String Manipulation Region NULL", make_string_manip('regexReplace($Region$,"^NULL$","")', "Region"), 50+COL_W,   y)
 s2 = add_node("String Manipulation Fax NULL",    make_string_manip('regexReplace($Fax$,"^NULL$","")',    "Fax"),    50+COL_W*2, y)
 w  = add_node("DB Writer staging.customers",     make_db_writer("staging", "customers"),               50+COL_W*3, y)
@@ -372,14 +329,14 @@ connect(n, s1); connect(s1, s2); connect(s2, w); connect(conn, w, 1, 2)
 
 # --- Products (row 2) ---
 y += ROW_H
-n  = add_node("CSV Reader Products",         make_csv_reader("/path/to/Products.csv"), 50,        y)
+n  = add_node("CSV Reader Products",         make_csv_reader("Products.csv"), 50,        y)
 rf = add_node("Row Filter ProductID le 77",  make_row_filter("ProductID", "77"),       50+COL_W,  y)
 w  = add_node("DB Writer staging.products",  make_db_writer("staging", "products"),    50+COL_W*2, y)
 connect(n, rf); connect(rf, w); connect(conn, w, 1, 2)
 
 # --- Orders (row 3) ---
 y += ROW_H
-n   = add_node("CSV Reader Orders",                 make_csv_reader("/path/to/Orders.csv"),           50,         y)
+n   = add_node("CSV Reader Orders",                 make_csv_reader("Orders.csv"),           50,         y)
 sm1 = add_node("String Manipulation ShipRegion",    make_string_manip('regexReplace($ShipRegion$,"^NULL$","")','ShipRegion'), 50+COL_W,   y)
 sm2 = add_node("String Manipulation ShippedDate",   make_string_manip('regexReplace($ShippedDate$,"^NULL$","")','ShippedDate'), 50+COL_W*2, y)
 d1  = add_node("String to DateTime OrderDate",      make_str_to_date("OrderDate",    "MM-dd-yyyy"),   50+COL_W*3, y)
@@ -391,15 +348,14 @@ connect(conn, w, 1, 2)
 
 # --- OrderDetails (row 4) ---
 y += ROW_H
-n  = add_node("CSV Reader OrderDetails", make_csv_reader("/path/to/OrderDetails.csv"), 50,        y)
-mf = add_node("Rule Engine ABS Discount",  make_rule_engine_abs("Discount"),                       50+COL_W,  y)
-mv = add_node("Missing Value Discount 0",  make_missing_value("Discount", "0"),                   50+COL_W*2, y)
-w  = add_node("DB Writer staging.order_details", make_db_writer("staging", "order_details"),      50+COL_W*3, y)
-connect(n, mf); connect(mf, mv); connect(mv, w); connect(conn, w, 1, 2)
+n  = add_node("CSV Reader OrderDetails",        make_csv_reader("OrderDetails.csv"), 50,        y)
+re = add_node("Rule Engine Discount Fix",       make_rule_engine_discount("Discount"),        50+COL_W,  y)
+w  = add_node("DB Writer staging.order_details", make_db_writer("staging", "order_details"),  50+COL_W*2, y)
+connect(n, re); connect(re, w); connect(conn, w, 1, 2)
 
 # --- Employees (row 5) ---
 y += ROW_H
-n  = add_node("CSV Reader Employees",       make_csv_reader("/path/to/Employees.csv"), 50,        y)
+n  = add_node("CSV Reader Employees",       make_csv_reader("Employees.csv"), 50,        y)
 d1 = add_node("String to DateTime BirthDate", make_str_to_date("BirthDate", "dd-MM-yyyy"),        50+COL_W,  y)
 d2 = add_node("String to DateTime HireDate",  make_str_to_date("HireDate",  "dd-MM-yyyy"),        50+COL_W*2, y)
 w  = add_node("DB Writer staging.employees",  make_db_writer("staging", "employees"),             50+COL_W*3, y)
@@ -457,7 +413,7 @@ workflow_xml = f"""\
     <config key="workflow_credentials"/>
     <config key="workflow_variables"/>
     {entry("customDescription", "", isnull=True)}
-    {entry("state", "IDLE")}
+    {entry("state", "CONFIGURED")}
 </config>
 """
 
@@ -492,5 +448,6 @@ print()
 print("Next steps:")
 print("  1. KNIME → File → Import KNIME Workflow → select staging_etl.knwf")
 print("  2. Open 'PostgreSQL Connector' → set host / database / user / password")
-print("  3. Open each 'CSV Reader' → set absolute file path")
+print("  3. CSV Readers use knime://knime.mountpoint/<name>.csv (workspace root)")
+print("     → ensure the CSV files are at the root of your KNIME workspace")
 print("  4. Execute workflow")
