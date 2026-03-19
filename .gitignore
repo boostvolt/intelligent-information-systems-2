@@ -1,6 +1,9 @@
 # KNIME / Eclipse workspace metadata
 .metadata/
 
+# KNIME bundled example workflows
+Example Workflows/
+
 # macOS
 .DS_Store
 .AppleDouble
