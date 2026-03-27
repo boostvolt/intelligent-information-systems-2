@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns="http://www.knime.org/2008/09/XMLConfig" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.knime.org/2008/09/XMLConfig http://www.knime.org/XMLConfig_2008_09.xsd" key="settings.xml">
+    <entry key="node_file" type="xstring" value="settings.xml"/>
+    <config key="flow_stack"/>
+    <config key="internal_node_subsettings">
+        <entry key="memory_policy" type="xstring" value="CacheSmallInMemory"/>
+    </config>
+    <config key="model">
+        <entry key="includeLeftUnmatchedInOutput" type="xboolean" value="false"/>
+        <entry key="includeRightUnmatchedInOutput" type="xboolean" value="false"/>
+        <entry key="compositionMode" type="xstring" value="MATCH_ALL"/>
+        <config key="matchingCriteria">
+            <config key="0">
+                <entry key="leftTableColumn" type="xstring" value="CustomerID"/>
+                <entry key="rightTableColumn" type="xstring" value="CustomerID"/>
+            </config>
+        </config>
+        <config key="leftColumnSelectionConfig">
+            <entry key="mode" type="xstring" value="MANUAL"/>
+            <config key="patternFilter">
+                <entry key="pattern" type="xstring" value=""/>
+                <entry key="isCaseSensitive" type="xboolean" value="false"/>
+                <entry key="isInverted" type="xboolean" value="false"/>
+            </config>
+            <config key="manualFilter">
+                <config key="manuallySelected">
+                    <entry key="array-size" type="xint" value="12"/>
+                    <entry key="0" type="xstring" value="ID"/>
+                    <entry key="1" type="xstring" value="OrderID"/>
+                    <entry key="2" type="xstring" value="ProductID"/>
+                    <entry key="3" type="xstring" value="CustomerID"/>
+                    <entry key="4" type="xstring" value="EmployeeID"/>
+                    <entry key="5" type="xstring" value="OrderDate"/>
+                    <entry key="6" type="xstring" value="Freight"/>
+                    <entry key="7" type="xstring" value="ShipVia"/>
+                    <entry key="8" type="xstring" value="UnitPrice"/>
+                    <entry key="9" type="xstring" value="Quantity"/>
+                    <entry key="10" type="xstring" value="Discount"/>
+                    <entry key="11" type="xstring" value="TotalAmount"/>
+                </config>
+                <config key="manuallyDeselected">
+                    <entry key="array-size" type="xint" value="0"/>
+                </config>
+                <entry key="includeUnknownColumns" type="xboolean" value="false"/>
+            </config>
+            <config key="typeFilter">
+                <config key="selectedTypes">
+                    <entry key="array-size" type="xint" value="0"/>
+                </config>
+            </config>
+        </config>
+        <config key="rightColumnSelectionConfig">
+            <entry key="mode" type="xstring" value="MANUAL"/>
+            <config key="patternFilter">
+                <entry key="pattern" type="xstring" value=""/>
+                <entry key="isCaseSensitive" type="xboolean" value="false"/>
+                <entry key="isInverted" type="xboolean" value="false"/>
+            </config>
+            <config key="manualFilter">
+                <config key="manuallySelected">
+                    <entry key="array-size" type="xint" value="5"/>
+                    <entry key="0" type="xstring" value="CustomerID"/>
+                    <entry key="1" type="xstring" value="CompanyName"/>
+                    <entry key="2" type="xstring" value="City"/>
+                    <entry key="3" type="xstring" value="Region"/>
+                    <entry key="4" type="xstring" value="Country"/>
+                </config>
+                <config key="manuallyDeselected">
+                    <entry key="array-size" type="xint" value="0"/>
+                </config>
+                <entry key="includeUnknownColumns" type="xboolean" value="false"/>
+            </config>
+            <config key="typeFilter">
+                <config key="selectedTypes">
+                    <entry key="array-size" type="xint" value="0"/>
+                </config>
+            </config>
+        </config>
+        <entry key="handlingMode" type="xstring" value="APPEND_SUFFIX_AUTOMATIC"/>
+        <entry key="customSuffix" type="xstring" value=" (Right)"/>
+        <entry key="filterLeftJoinOnColumns" type="xboolean" value="false"/>
+        <entry key="filterRightJoinOnColumns" type="xboolean" value="true"/>
+    </config>
+    <config key="variables"/>
+    <entry key="customDescription" type="xstring" isnull="true" value=""/>
+    <entry key="state" type="xstring" value="EXECUTED"/>
+    <entry key="factory" type="xstring" value="org.knime.database.node.manipulation.joiner.DBJoinNodeFactory"/>
+    <entry key="node-name" type="xstring" value="DB Joiner"/>
+    <entry key="node-bundle-name" type="xstring" value="KNIME database nodes"/>
+    <entry key="node-bundle-symbolic-name" type="xstring" value="org.knime.database.nodes"/>
+    <entry key="node-bundle-vendor" type="xstring" value="KNIME AG, Zurich, Switzerland"/>
+    <entry key="node-bundle-version" type="xstring" value="5.8.2.v202601161344"/>
+    <entry key="node-feature-name" type="xstring" value="KNIME Database"/>
+    <entry key="node-feature-symbolic-name" type="xstring" value="org.knime.features.database.feature.group"/>
+    <entry key="node-feature-vendor" type="xstring" value="KNIME AG, Zurich, Switzerland"/>
+    <entry key="node-feature-version" type="xstring" value="5.8.2.v202601161344"/>
+    <config key="factory_settings"/>
+    <entry key="name" type="xstring" value="DB Joiner"/>
+    <entry key="hasContent" type="xboolean" value="true"/>
+    <entry key="isInactive" type="xboolean" value="false"/>
+    <config key="ports">
+        <config key="port_1">
+            <entry key="index" type="xint" value="1"/>
+            <entry key="port_spec_class" type="xstring" value="org.knime.database.port.DBDataPortObjectSpec"/>
+            <entry key="port_object_class" type="xstring" value="org.knime.database.port.DBDataPortObject"/>
+            <entry key="port_object_summary" type="xstring" value="PostgreSQL f713c0fa-e759-41a6-bbef-3f5d7464243f"/>
+            <entry key="port_spec_location" type="xstring" value="spec/spec.zip"/>
+            <entry key="port_object_location" type="xstring" value="object/portobject.zip"/>
+            <entry key="port_dir_location" type="xstring" value="port_1"/>
+        </config>
+    </config>
+    <config key="filestores">
+        <entry key="file_store_location" type="xstring" isnull="true" value=""/>
+        <entry key="file_store_id" type="xstring" value="daef51e9-1763-4c8e-a89d-033b171c0c25"/>
+    </config>
+</config>

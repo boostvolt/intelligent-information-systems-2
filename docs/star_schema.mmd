@@ -1,57 +1,48 @@
 erDiagram
     dim_product {
-        SERIAL product_key PK
-        INTEGER product_id
-        VARCHAR product_name
-        VARCHAR category_name
-        NUMERIC unit_price
-        BOOLEAN discontinued
+        INTEGER ProductID PK
+        VARCHAR ProductName
+        FLOAT UnitPrice
+        INTEGER Discontinued
+        VARCHAR CategoryName
     }
     dim_customer {
-        SERIAL customer_key PK
-        CHAR customer_id
-        VARCHAR company_name
-        VARCHAR city
-        VARCHAR region
-        VARCHAR country
+        VARCHAR CustomerID PK
+        VARCHAR CompanyName
+        VARCHAR City
+        VARCHAR Region
+        VARCHAR Country
     }
     dim_employee {
-        SERIAL employee_key PK
-        INTEGER employee_id
-        VARCHAR full_name
-        VARCHAR title
-        VARCHAR reports_to_name
+        INTEGER EmployeeID PK
+        VARCHAR Title
+        VARCHAR ReportsToFullName
+        VARCHAR FullName
     }
     dim_time {
-        SERIAL time_key PK
-        DATE date
-        VARCHAR day_name
-        INTEGER month
-        INTEGER quarter
-        INTEGER year
-        BOOLEAN is_weekend
+        DATE Date PK
+        INTEGER DayOfWeekNumber
+        VARCHAR DayOfWeekName
+        INTEGER Month
+        INTEGER Quarter
+        INTEGER Year
+        BOOLEAN IsWeekend
     }
-    dim_shipping {
-        SERIAL shipping_key PK
-        INTEGER ship_via_id
-        VARCHAR shipper_name
+    fact_order {
+        BIGINT ID PK
+        INTEGER OrderID
+        INTEGER ProductID FK
+        VARCHAR CustomerID FK
+        INTEGER EmployeeID FK
+        DATE OrderDate FK
+        FLOAT Freight
+        INTEGER ShipVia
+        FLOAT UnitPrice
+        INTEGER Quantity
+        FLOAT Discount
+        FLOAT TotalAmount
     }
-    fact_orders {
-        SERIAL fact_id PK
-        INTEGER product_key FK
-        INTEGER customer_key FK
-        INTEGER employee_key FK
-        INTEGER order_time_key FK
-        INTEGER shipping_key FK
-        INTEGER order_id
-        NUMERIC unit_price
-        INTEGER quantity
-        NUMERIC discount
-        NUMERIC total_amount
-        NUMERIC freight_allocation
-    }
-    dim_product ||--o{ fact_orders : "product_key"
-    dim_customer ||--o{ fact_orders : "customer_key"
-    dim_employee ||--o{ fact_orders : "employee_key"
-    dim_time ||--o{ fact_orders : "order_time_key"
-    dim_shipping ||--o{ fact_orders : "shipping_key"
+    dim_product ||--o{ fact_order : "ProductID"
+    dim_customer ||--o{ fact_order : "CustomerID"
+    dim_employee ||--o{ fact_order : "EmployeeID"
+    dim_time ||--o{ fact_order : "OrderDate"

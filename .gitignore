@@ -7,9 +7,6 @@ Example Workflows/
 # KNIME generated intermediate workflow directory (staging_etl.knwf is the deliverable)
 knime_workflow/
 
-# Raw data CSVs (source data, not for version control)
-*.csv
-
 # Assignment / project docs
 *.docx
 *.doc

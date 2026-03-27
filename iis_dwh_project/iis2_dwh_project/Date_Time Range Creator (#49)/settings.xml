@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns="http://www.knime.org/2008/09/XMLConfig" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.knime.org/2008/09/XMLConfig http://www.knime.org/XMLConfig_2008_09.xsd" key="settings.xml">
+    <entry key="node_file" type="xstring" value="settings.xml"/>
+    <config key="flow_stack"/>
+    <config key="internal_node_subsettings">
+        <entry key="memory_policy" type="xstring" value="CacheSmallInMemory"/>
+    </config>
+    <config key="model">
+        <entry key="outputType" type="xstring" value="LOCAL_DATE"/>
+        <entry key="localDateStart" type="xstring" value="1900-01-01"/>
+        <entry key="localTimeStart" type="xstring" value="16:44:38"/>
+        <entry key="localDateTimeStart" type="xstring" value="2025-03-22T17:44:38"/>
+        <entry key="zonedDateTimeStart" type="xstring" value="2025-03-22T17:44:38+01:00[Europe/Zurich]"/>
+        <entry key="useExecutionTimeStart" type="xboolean" value="false"/>
+        <entry key="fixedSteps" type="xstring" value="INTERVAL_AND_END"/>
+        <entry key="numberOfRows" type="xlong" value="1000"/>
+        <entry key="interval" type="xstring" value="P0Y0M0W1D"/>
+        <entry key="localDateEnd" type="xstring" value="2026-03-22"/>
+        <entry key="localTimeEnd" type="xstring" value="17:44:38"/>
+        <entry key="localDateTimeEnd" type="xstring" value="2026-03-22T17:44:38.854242"/>
+        <entry key="zonedDateTimeEnd" type="xstring" value="2026-03-22T17:44:38.854242+01:00[Europe/Zurich]"/>
+        <entry key="useExecutionTimeEnd" type="xboolean" value="true"/>
+        <entry key="outputColumnName" type="xstring" value="Date"/>
+    </config>
+    <config key="variables"/>
+    <entry key="customDescription" type="xstring" isnull="true" value=""/>
+    <entry key="state" type="xstring" value="EXECUTED"/>
+    <entry key="factory" type="xstring" value="org.knime.time.node.create.createdatetime.CreateDateTimeNodeFactory2"/>
+    <entry key="node-name" type="xstring" value="Date&amp;Time Range Creator"/>
+    <entry key="node-bundle-name" type="xstring" value="KNIME Date and Time Handling"/>
+    <entry key="node-bundle-symbolic-name" type="xstring" value="org.knime.time"/>
+    <entry key="node-bundle-vendor" type="xstring" value="KNIME AG, Zurich, Switzerland"/>
+    <entry key="node-bundle-version" type="xstring" value="5.8.0.v202510011917"/>
+    <entry key="node-feature-name" type="xstring" value="KNIME Base nodes"/>
+    <entry key="node-feature-symbolic-name" type="xstring" value="org.knime.features.base.feature.group"/>
+    <entry key="node-feature-vendor" type="xstring" value="KNIME AG, Zurich, Switzerland"/>
+    <entry key="node-feature-version" type="xstring" value="5.8.3.v202603112120"/>
+    <config key="factory_settings"/>
+    <entry key="name" type="xstring" value="Date&amp;Time Range Creator"/>
+    <entry key="hasContent" type="xboolean" value="true"/>
+    <entry key="isInactive" type="xboolean" value="false"/>
+    <config key="ports">
+        <config key="port_1">
+            <entry key="index" type="xint" value="1"/>
+            <entry key="port_spec_class" type="xstring" value="org.knime.core.data.DataTableSpec"/>
+            <entry key="port_object_class" type="xstring" value="org.knime.core.node.BufferedDataTable"/>
+            <entry key="port_object_summary" type="xstring" value="Rows: 46107, Cols: 1"/>
+            <entry key="port_dir_location" type="xstring" value="port_1"/>
+        </config>
+    </config>
+    <config key="filestores">
+        <entry key="file_store_location" type="xstring" isnull="true" value=""/>
+        <entry key="file_store_id" type="xstring" value="33d81afa-b934-4e46-a89e-584533976ddc"/>
+    </config>
+</config>
