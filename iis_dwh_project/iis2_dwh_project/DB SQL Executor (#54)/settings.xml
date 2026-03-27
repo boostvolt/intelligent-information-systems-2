@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns="http://www.knime.org/2008/09/XMLConfig" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.knime.org/2008/09/XMLConfig http://www.knime.org/XMLConfig_2008_09.xsd" key="settings.xml">
+    <entry key="node_file" type="xstring" value="settings.xml"/>
+    <config key="flow_stack"/>
+    <config key="internal_node_subsettings">
+        <entry key="memory_policy" type="xstring" value="CacheSmallInMemory"/>
+    </config>
+    <config key="model">
+        <entry key="statementSeparator" type="xstring" value=";"/>
+        <entry key="statement" type="xstring" value="DROP TABLE IF EXISTS data_mart.fact_order;%%00010DROP TABLE IF EXISTS data_mart.dim_time;%%00010DROP TABLE IF EXISTS data_mart.dim_customer;%%00010DROP TABLE IF EXISTS data_mart.dim_employee;%%00010DROP TABLE IF EXISTS data_mart.dim_product;%%00010%%00010CREATE TABLE data_mart.dim_time (%%00010    &quot;Date&quot;             DATE PRIMARY KEY,%%00010    &quot;DayOfWeekNumber&quot;  INTEGER,%%00010    &quot;DayOfWeekName&quot;    VARCHAR(255),%%00010    &quot;Month&quot;            INTEGER,%%00010    &quot;Quarter&quot;          INTEGER,%%00010    &quot;Year&quot;             INTEGER,%%00010    &quot;IsWeekend&quot;        BOOLEAN%%00010);%%00010%%00010CREATE TABLE data_mart.dim_customer (%%00010    &quot;CustomerID&quot;   VARCHAR(10) PRIMARY KEY,%%00010    &quot;CompanyName&quot;  VARCHAR(2000),%%00010    &quot;City&quot;         VARCHAR(255),%%00010    &quot;Region&quot;       VARCHAR(255),%%00010    &quot;Country&quot;      VARCHAR(255)%%00010);%%00010%%00010CREATE TABLE data_mart.dim_employee (%%00010    &quot;EmployeeID&quot;        INTEGER PRIMARY KEY,%%00010    &quot;Title&quot;             VARCHAR(255),%%00010    &quot;ReportsToFullName&quot; VARCHAR(255),%%00010    &quot;FullName&quot;          VARCHAR(255)%%00010);%%00010%%00010CREATE TABLE data_mart.dim_product (%%00010    &quot;ProductID&quot;    INTEGER PRIMARY KEY,%%00010    &quot;ProductName&quot;  VARCHAR(255),%%00010    &quot;UnitPrice&quot;    FLOAT,%%00010    &quot;Discontinued&quot; INTEGER,%%00010    &quot;CategoryName&quot; VARCHAR(255)%%00010);%%00010%%00010CREATE TABLE data_mart.fact_order (%%00010    &quot;ID&quot;          BIGINT PRIMARY KEY,%%00010    &quot;OrderID&quot;     INTEGER,%%00010    &quot;ProductID&quot;   INTEGER REFERENCES data_mart.dim_product(&quot;ProductID&quot;),%%00010    &quot;CustomerID&quot;  VARCHAR(10) REFERENCES data_mart.dim_customer(&quot;CustomerID&quot;),%%00010    &quot;EmployeeID&quot;  INTEGER REFERENCES data_mart.dim_employee(&quot;EmployeeID&quot;),%%00010    &quot;OrderDate&quot;   DATE REFERENCES data_mart.dim_time(&quot;Date&quot;),%%00010    &quot;Freight&quot;     FLOAT,%%00010    &quot;ShipVia&quot;     INTEGER,%%00010    &quot;UnitPrice&quot;   FLOAT,%%00010    &quot;Quantity&quot;    INTEGER,%%00010    &quot;Discount&quot;    FLOAT,%%00010    &quot;TotalAmount&quot; FLOAT%%00010);%%00010"/>
+        <config key="multipleStatement_Internals">
+            <entry key="SettingsModelID" type="xstring" value="SMID_boolean"/>
+            <entry key="EnabledStatus" type="xboolean" value="true"/>
+        </config>
+        <entry key="multipleStatement" type="xboolean" value="true"/>
+    </config>
+    <entry key="customDescription" type="xstring" isnull="true" value=""/>
+    <entry key="state" type="xstring" value="EXECUTED"/>
+    <entry key="factory" type="xstring" value="org.knime.database.node.manipulation.executor.DBExecutorNodeFactory"/>
+    <entry key="node-name" type="xstring" value="DB SQL Executor"/>
+    <entry key="node-bundle-name" type="xstring" value="KNIME database nodes"/>
+    <entry key="node-bundle-symbolic-name" type="xstring" value="org.knime.database.nodes"/>
+    <entry key="node-bundle-vendor" type="xstring" value="KNIME AG, Zurich, Switzerland"/>
+    <entry key="node-bundle-version" type="xstring" value="5.8.2.v202601161344"/>
+    <entry key="node-feature-name" type="xstring" value="KNIME Database"/>
+    <entry key="node-feature-symbolic-name" type="xstring" value="org.knime.features.database.feature.group"/>
+    <entry key="node-feature-vendor" type="xstring" value="KNIME AG, Zurich, Switzerland"/>
+    <entry key="node-feature-version" type="xstring" value="5.8.2.v202601161344"/>
+    <config key="factory_settings"/>
+    <entry key="name" type="xstring" value="DB SQL Executor"/>
+    <entry key="hasContent" type="xboolean" value="true"/>
+    <entry key="isInactive" type="xboolean" value="false"/>
+    <config key="ports">
+        <config key="port_1">
+            <entry key="index" type="xint" value="1"/>
+            <entry key="port_spec_class" type="xstring" value="org.knime.database.port.DBSessionPortObjectSpec"/>
+            <entry key="port_object_class" type="xstring" value="org.knime.database.port.DBSessionPortObject"/>
+            <entry key="port_object_summary" type="xstring" value="PostgreSQL ed5be1ae-650c-4757-9b96-8661db93d617"/>
+            <entry key="port_spec_location" type="xstring" value="spec/spec.zip"/>
+            <entry key="port_object_location" type="xstring" value="object/portobject.zip"/>
+            <entry key="port_dir_location" type="xstring" value="port_1"/>
+        </config>
+    </config>
+    <config key="filestores">
+        <entry key="file_store_location" type="xstring" isnull="true" value=""/>
+        <entry key="file_store_id" type="xstring" value="5d877705-4f9b-4384-83af-39299adeab4f"/>
+    </config>
+</config>
