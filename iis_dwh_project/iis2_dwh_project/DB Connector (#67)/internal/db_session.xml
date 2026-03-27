@@ -2,7 +2,7 @@
 <config xmlns="http://www.knime.org/2008/09/XMLConfig" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.knime.org/2008/09/XMLConfig http://www.knime.org/XMLConfig_2008_09.xsd" key="db_session">
     <config key="Session Info">
         <entry key="version" type="xint" value="7"/>
-        <entry key="sessionID" type="xstring" value="bcc0f0ad-c5db-4ced-ad27-067bddce3d63"/>
+        <entry key="sessionID" type="xstring" value="12c9e594-7a65-46d6-ad73-a2eb4c806a97"/>
         <entry key="dbTypeId" type="xstring" value="postgres"/>
         <entry key="dialectId" type="xstring" value="postgres"/>
         <entry key="dbURL" type="xstring" value="jdbc:postgresql://localhost:5432/iis2_dwh_project_1"/>

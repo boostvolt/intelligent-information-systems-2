@@ -553,6 +553,6 @@
     </config>
     <config key="filestores">
         <entry key="file_store_location" type="xstring" isnull="true" value=""/>
-        <entry key="file_store_id" type="xstring" value="89f4ee42-8892-4954-9056-34159d143682"/>
+        <entry key="file_store_id" type="xstring" value="e79ae44a-bd50-41b9-a9a6-3db8655339a8"/>
     </config>
 </config>
